@@ -12,7 +12,6 @@ class Book extends React.Component {
 
 
   render() {
-console.log(this.props)
     return (
       <li key={this.props.book.id}>
         <div className="book">

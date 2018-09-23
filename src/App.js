@@ -5,7 +5,6 @@ import * as BooksAPI from './BooksAPI';
 import './App.css';
 import { Link } from 'react-router-dom';
 import { Route } from 'react-router-dom';
-import ShelfList from './ShelfList';
 import Book from './Book';
 
 
@@ -76,23 +75,24 @@ class BooksApp extends React.Component {
     this.setState({query: query})
   }
 
+  updateShelf() {
+
+  }
+
   render() {
     const { listAllBooks, query } = this.state;
-
     let bookSearchResults = [];
+
     if(query) {
       const match = new RegExp(escapeRegExp(query), 'i')
       bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title))
     }
-
     bookSearchResults.sort(sortBy('title'));
 
-    let currentlyReading = listAllBooks.filter((book) => (book.shelf)==='currentlyReading');
-    let wantToRead = listAllBooks.filter((book) => (book.shelf)==='wantToRead');
-    let read = listAllBooks.filter((book) => (book.shelf)==='read');
+    let currentlyReading = listAllBooks.filter((book) => book.shelf === "currentlyReading")
+    let wantToRead = listAllBooks.filter((book) => book.shelf === "wantToRead")
+    let read = listAllBooks.filter((book) => book.shelf === "read")
 
-
-    console.log(listAllBooks);
     return (
       <div className="app">
         <Route exact path="/" render={() => (
@@ -104,19 +104,31 @@ class BooksApp extends React.Component {
               <div className="bookshelf">
                 <h2 className="bookshelf-title">Currently Reading</h2>
                 <div className="bookshelf-books">
-                  <ShelfList listAllBooks={currentlyReading}/>
+                  <ol className="books-grid">
+                    {currentlyReading.map((book) => (
+                      <Book key={book.id} book={book}/>
+                    ))}
+                  </ol>
                 </div>
               </div>
               <div className="bookshelf">
                 <h2 className="bookshelf-title">Want To Read</h2>
                 <div className="bookshelf-books">
-                  <ShelfList listAllBooks={wantToRead} />
+                  <ol className="books-grid">
+                    {wantToRead.map((book) => (
+                      <Book key={book.id} book={book}/>
+                    ))}
+                  </ol>
                 </div>
               </div>
               <div className="bookshelf">
                 <h2 className="bookshelf-title">Read</h2>
                 <div className="bookshelf-books">
-                  <ShelfList listAllBooks={read} />
+                  <ol className="books-grid">
+                    {read.map((book) => (
+                      <Book key={book.id} book={book}/>
+                    ))}
+                  </ol>
                 </div>
               </div>
             </div>
@@ -140,7 +152,7 @@ class BooksApp extends React.Component {
             <div className="search-books-results">
               <ol className="books-grid">
                 {bookSearchResults.map((book) => (
-                  <Book book={book}/>
+                  <Book key={book.id} book={book}/>
                 ))}
               </ol>
             </div>
