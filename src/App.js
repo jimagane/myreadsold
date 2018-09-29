@@ -62,7 +62,9 @@ class BooksApp extends React.Component {
         'shelf': 'read'
       }
     ],
-
+    currentlyReading: [],
+    wantToRead: [],
+    read: [],
     query: ''
   }
 
@@ -106,10 +108,14 @@ class BooksApp extends React.Component {
     }
     bookSearchResults.sort(sortBy('title'));
 
+    let currentlyReading = listAllBooks.filter((book) => book.shelf === "currentlyReading");
+    let wantToRead = listAllBooks.filter((book) => book.shelf === "wantToRead");
+    let read = listAllBooks.filter((book) => book.shelf === "read");
+
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          <ListBooks listAllBooks={listAllBooks} onUpdateBook={this.updateBook}/>
+          <ListBooks listAllBooks={listAllBooks} currentlyReading={currentlyReading} wantToRead={wantToRead} read={read} onUpdateBook={this.updateBook}/>
         )}/>
         <Route path="/search" render={() => (
           <div className="search-books">
@@ -126,8 +132,9 @@ class BooksApp extends React.Component {
             <div className="search-books-results">
               <ol className="books-grid">
                 {bookSearchResults.map((book) => (
-                  <Book key={book.id} book={book}/>
+                  <Book key={book.id} book={book} onUpdateBook={this.updateBook}/>
                 ))}
+
               </ol>
             </div>
           </div>
