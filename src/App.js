@@ -5,6 +5,7 @@ import * as BooksAPI from './BooksAPI';
 import './App.css';
 import { Link } from 'react-router-dom';
 import { Route } from 'react-router-dom';
+import ListBooks from './ListBooks';
 import Book from './Book';
 
 
@@ -68,16 +69,32 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then(response => this.setState((prevState) => (
     {listAllBooks: response.concat(prevState.listAllBooks)}
-    )))
+  )))
   }
 
   updateQuery = (query) => {
     this.setState({query: query})
   }
 
-  updateShelf() {
+  updateBook = (shelf, key) => {
+    let books = this.state.listAllBooks;
 
+    for (const book of books) {
+      if (book.id === key.id) {
+        let i = books.indexOf(book);
+
+        let stateCopy = Object.assign({}, this.state);
+        stateCopy.listAllBooks = stateCopy.listAllBooks.slice();
+        stateCopy.listAllBooks[i] = Object.assign({}, stateCopy.listAllBooks[i]);
+        stateCopy.listAllBooks[i].shelf = shelf;
+        this.setState(stateCopy);
+
+        console.log(this.state.listAllBooks[i].shelf, i, shelf, stateCopy)
+      }
+    }
   }
+
+
 
   render() {
     const { listAllBooks, query } = this.state;
@@ -89,53 +106,10 @@ class BooksApp extends React.Component {
     }
     bookSearchResults.sort(sortBy('title'));
 
-    let currentlyReading = listAllBooks.filter((book) => book.shelf === "currentlyReading")
-    let wantToRead = listAllBooks.filter((book) => book.shelf === "wantToRead")
-    let read = listAllBooks.filter((book) => book.shelf === "read")
-
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div className="bookshelf">
-                <h2 className="bookshelf-title">Currently Reading</h2>
-                <div className="bookshelf-books">
-                  <ol className="books-grid">
-                    {currentlyReading.map((book) => (
-                      <Book key={book.id} book={book}/>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-              <div className="bookshelf">
-                <h2 className="bookshelf-title">Want To Read</h2>
-                <div className="bookshelf-books">
-                  <ol className="books-grid">
-                    {wantToRead.map((book) => (
-                      <Book key={book.id} book={book}/>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-              <div className="bookshelf">
-                <h2 className="bookshelf-title">Read</h2>
-                <div className="bookshelf-books">
-                  <ol className="books-grid">
-                    {read.map((book) => (
-                      <Book key={book.id} book={book}/>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-            </div>
-            <div className="open-search">
-              <Link to="/search">Add a book</Link>
-            </div>
-          </div>
+          <ListBooks listAllBooks={listAllBooks} onUpdateBook={this.updateBook}/>
         )}/>
         <Route path="/search" render={() => (
           <div className="search-books">

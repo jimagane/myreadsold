@@ -2,10 +2,6 @@ import React from 'react';
 
 class Book extends React.Component {
 
-  state = {
-    shelf: this.props.book.shelf
-  }
-
   updateShelf = (cat) => {
     this.setState({shelf: cat})
   }
@@ -13,12 +9,12 @@ class Book extends React.Component {
 
   render() {
     return (
-      <li key={this.props.book.id}>
+      <li>
         <div className="book">
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.thumbnail})` }}></div>
             <div className="book-shelf-changer">
-              <select value={this.state.shelf} onChange={(event) => this.updateShelf(event.target.value)}>
+              <select value={this.props.book.shelf} onChange={(book) => this.props.onUpdateBook(book.target.value, this.props.book)}>
                 <option value="move" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
