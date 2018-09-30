@@ -47,7 +47,7 @@ class ListBooks extends React.Component {
         </div>
       </div>
     )
-  };
-}
+  }
+};
 
 export default ListBooks;

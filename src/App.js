@@ -1,13 +1,11 @@
 import React from 'react';
-import escapeRegExp from 'escape-string-regexp';
-import sortBy from 'sort-by';
 import * as BooksAPI from './BooksAPI';
 import './App.css';
-import { Link } from 'react-router-dom';
 import { Route } from 'react-router-dom';
+import escapeRegExp from 'escape-string-regexp';
+import sortBy from 'sort-by';
 import ListBooks from './ListBooks';
-import Book from './Book';
-
+import SearchBooks from './SearchBooks';
 
 class BooksApp extends React.Component {
 
@@ -66,6 +64,10 @@ class BooksApp extends React.Component {
     query: ''
   }
 
+/*
+ * Retrieve books from API and merge with books listed in initial state. Check
+ * for previous state stored in local storage and use if found.
+ */
   async componentWillMount() {
     await BooksAPI.getAll().then(response => this.setState((prevState) => (
       {listAllBooks: response.concat(prevState.listAllBooks)}
@@ -78,62 +80,48 @@ class BooksApp extends React.Component {
     this.setState({query: query})
   }
 
+/*
+ * When book shelf option is changed, function iterates through state's array
+ * of books and updates shelf of matching book.
+ * After shelf has updated, the change is stored in localStorage.
+ */
   updateBook = (shelf, key) => {
     let books = this.state.listAllBooks;
     for (const book of books) {
       if (book.id === key.id) {
         let i = books.indexOf(book);
+        // Code solution for updating single property of object in array via copying object and slicing, credit to Radosław Miernik, url: 'https://stackoverflow.com/questions/35174489/reactjs-setstate-of-object-key-in-array/35174579'
         let stateCopy = Object.assign({}, this.state);
         stateCopy.listAllBooks = stateCopy.listAllBooks.slice();
         stateCopy.listAllBooks[i] = Object.assign({}, stateCopy.listAllBooks[i]);
         stateCopy.listAllBooks[i].shelf = shelf;
         this.setState(stateCopy);
+
         localStorage.setItem('mydata', JSON.stringify(stateCopy));
       }
     }
   }
 
   render() {
-
     const { listAllBooks, query } = this.state;
-
-    let bookSearchResults = [];
-
-    if(query) {
-      const match = new RegExp(escapeRegExp(query), 'i')
-      bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title) || match.test(book.subtitle) || match.test(book.categories) || match.test(book.description) || match.test(book.canonicalVolumeLink))
-    }
-    bookSearchResults.sort(sortBy('title'));
-
     let currentlyReading = listAllBooks.filter((book) => book.shelf === "currentlyReading");
     let wantToRead = listAllBooks.filter((book) => book.shelf === "wantToRead");
     let read = listAllBooks.filter((book) => book.shelf === "read");
+    let bookSearchResults = [];
+
+    if(query) {
+      const match = new RegExp(escapeRegExp(query), 'i');
+      bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title) || match.test(book.subtitle) || match.test(book.categories) || match.test(book.description) || match.test(book.canonicalVolumeLink));
+      bookSearchResults.sort(sortBy('title'));
+    }
 
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          <ListBooks listAllBooks={listAllBooks} currentlyReading={currentlyReading} wantToRead={wantToRead} read={read} onUpdateBook={this.updateBook}/>
+          <ListBooks currentlyReading={currentlyReading} wantToRead={wantToRead} read={read} onUpdateBook={this.updateBook} />
         )}/>
         <Route path="/search" render={() => (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <Link to="/" className="close-search">Close</Link>
-              <div className="search-books-input-wrapper">
-                <input type="text"
-                 placeholder="Search by title or author"
-                 value={query}
-                 onChange={(event) => this.updateQuery(event.target.value)}
-                 />
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid">
-                {bookSearchResults.map((book) => (
-                  <Book key={book.id} book={book} onUpdateBook={this.updateBook}/>
-                ))}
-              </ol>
-            </div>
-          </div>
+          <SearchBooks query={query} onUpdateQuery={this.updateQuery} bookSearchResults={bookSearchResults} onUpdateBook={this.updateBook} />
         )}/>
       </div>
     )

@@ -1,28 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import escapeRegExp from 'escape-string-regexp';
-import sortBy from 'sort-by';
 import Book from './Book';
 
 class SearchBooks extends React.Component {
-  state = {
-    query: ''
-  }
-
-  updateQuery = (query) => {
-    this.setState({query: query})
-  }
 
   render() {
-    const { listAllBooks, query } = this.state;
-    let bookSearchResults = [];
-
-    if(query) {
-      const match = new RegExp(escapeRegExp(query), 'i')
-      bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title))
-    }
-    bookSearchResults.sort(sortBy('title'));
-
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -30,21 +12,21 @@ class SearchBooks extends React.Component {
           <div className="search-books-input-wrapper">
             <input type="text"
              placeholder="Search by title or author"
-             value={query}
-             onChange={(event) => this.updateQuery(event.target.value)}
+             value={this.props.query}
+             onChange={(event) => this.props.onUpdateQuery(event.target.value)}
              />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {bookSearchResults.map((book) => (
-              <Book key={book.id} book={book}/>
+            {this.props.bookSearchResults.map((book) => (
+              <Book key={book.id} book={book} onUpdateBook={this.props.onUpdateBook} />
             ))}
           </ol>
         </div>
       </div>
     )
-  };
-}
+  }
+};
 
 export default SearchBooks;
