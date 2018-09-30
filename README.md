@@ -4,7 +4,7 @@ Search for books and store them on your virtual shelf. Can organize books by 'cu
 
 ## Getting Started
 
-MyReads project can be cloned from github repository: https://github.com/jimagane/reactnd-project-myreads-starter.git
+MyReads project can be cloned from github repository: https://github.com/jimagane/myreads.git
 
 ### Prerequisites
 
