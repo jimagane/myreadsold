@@ -1,12 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import escapeRegExp from 'escape-string-regexp';
-import sortBy from 'sort-by';
 import Book from './Book';
 
 class ListBooks extends React.Component {
-
-
 
   render() {
     return(

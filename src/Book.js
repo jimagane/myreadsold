@@ -2,11 +2,6 @@ import React from 'react';
 
 class Book extends React.Component {
 
-  updateShelf = (cat) => {
-    this.setState({shelf: cat})
-  }
-
-
   render() {
     return (
       <li>
