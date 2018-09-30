@@ -22,7 +22,7 @@ class BooksApp extends React.Component {
       },
       {
         'id': '002',
-        'title': 'Ender&apos;s Game',
+        'title': "Ender's Game",
         'authors': ['Orson Scott Card'],
         'imageLinks': {thumbnail: 'http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api'},
         'shelf': 'none'
@@ -36,7 +36,7 @@ class BooksApp extends React.Component {
       },
       {
         'id': '004',
-        'title': 'Harry Potter and the Sorcerer&apos;s Stone',
+        'title': "Harry Potter and the Sorcerer's Stone",
         'authors': ['J.K. Rowling'],
         'imageLinks': {thumbnail: 'http://books.google.com/books/content?id=wrOQLV6xB-wC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72G3gA5A-Ka8XjOZGDFLAoUeMQBqZ9y-LCspZ2dzJTugcOcJ4C7FP0tDA8s1h9f480ISXuvYhA_ZpdvRArUL-mZyD4WW7CHyEqHYq9D3kGnrZCNiqxSRhry8TiFDCMWP61ujflB&source=gbs_api'},
         'shelf': 'none'
@@ -50,7 +50,7 @@ class BooksApp extends React.Component {
       },
       {
         'id': '006',
-        'title': 'Oh, the Places You&apos;ll Go!',
+        'title': "Oh, the Places You'll Go!",
         'authors': ['Seuss'],
         'imageLinks': {thumbnail: 'http://books.google.com/books/content?id=1q_xAwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE712CA0cBYP8VKbEcIVEuFJRdX1k30rjLM29Y-dw_qU1urEZ2cQ42La3Jkw6KmzMmXIoLTr50SWTpw6VOGq1leINsnTdLc_S5a5sn9Hao2t5YT7Ax1RqtQDiPNHIyXP46Rrw3aL8&source=gbs_api'},
         'shelf': 'none'
@@ -101,7 +101,7 @@ class BooksApp extends React.Component {
 
     if(query) {
       const match = new RegExp(escapeRegExp(query), 'i')
-      bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title))
+      bookSearchResults = listAllBooks.filter((book) => match.test(book.authors) || match.test(book.title) || match.test(book.subtitle) || match.test(book.categories) || match.test(book.description) || match.test(book.canonicalVolumeLink))
     }
     bookSearchResults.sort(sortBy('title'));
 
